@@ -12,7 +12,7 @@ module.exports = function(webdriverio, options, callback){
             .waitForExist('.arrow-left', 1000)
             .click('.arrow-left')
             .pause(250)
-            // if .InfoboxImage contains a figure, it has be re-rendered. if not, there was an error
+            // if .InfoboxImage contains a figure, it has been re-rendered. if not, there was an error
             .selectorExecute('.InfoboxImage', function (elements) { return elements[0].innerHTML.startsWith('<figure'); }, 5)
             .then(function (returned) {
                 passed = returned;
