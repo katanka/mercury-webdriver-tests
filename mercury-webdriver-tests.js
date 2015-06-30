@@ -10,15 +10,16 @@ var options = {
 var currentTests = 0,
     totalTests = 0,
     passedTests = 0,
-    testingStarted = false;
+    testingStarted = false,
+    output = [];
 
 startServer();
-waitFor(serverReady, 'Server started.\n', 'waiting...', startTests, 100);
-waitFor(testsDone, 'Tests complete.\n', null, function() { killServer(); finish(); }, 1000)
+waitFor(serverReady, 'Server Started.\n', 'waiting...', startTests, 100);
+waitFor(testsDone, 'Tests Complete.\n', null, function() { killServer(); finish(); }, 1000)
 
 //Start the selenium
 function startServer() {
-    console.log('Starting Selenium server...');
+    console.log('=== Starting Selenium Server ===');
     exec('java -jar selenium-server-standalone-2.45.0.jar', {silent:true}, function(status, output){});
 }
 
@@ -44,26 +45,26 @@ function waitFor(condition, successMessage, waitMessage, callback, time) {
 
 // Start the tests. They run asynchronously
 function startTests() {
-    console.log('Running tests...');
+    console.log('=== Running Tests ===');
 
     cd('tests');
     ls('*.js').forEach(function(file) {
-        console.log('\tStarting ' + file)
+        console.log('Starting ' + file)
         currentTests++;
         totalTests++;
         require('./tests/'+file)(webdriverio, options, testCallback);
     });
     cd('..');
-
-    console.log('Output:');
     testingStarted = true;
 }
 
-function testCallback(passed) {
+function testCallback(passed, message) {
     currentTests--;
 
     if (passed) {
         passedTests++;
+    } else {
+        output.push(message);
     }
 }
 
@@ -75,11 +76,18 @@ function testsDone() {
 // stop the selenium server
 function killServer() {
     // this must be terrible practice
-    console.log("Stopping server.\n");
+    console.log("=== Stopping Server ===\n");
     exec('kill \"$(ps aux | grep \'selenium-server-standalone\' | grep -v \'grep\' | head -n 1 | awk \'{print $2}\')\"');
 }
 
 //Do stuff with the data we gathered
 function finish() {
-    console.log('Out of ' + totalTests + ' tests, ' + passedTests + ' passed.');
+
+
+    console.log('=== Test Results ===');
+    console.log('Out of ' + totalTests + ' tests, ' + passedTests + ' passed.\n');
+
+    for (var i = 0; i < output.length; i++) {
+        console.log(output[i]+'\n');
+    }
 }
