@@ -17,7 +17,7 @@ startServer();
 waitFor(serverReady, 'Server Started.\n', 'waiting...', startTests, 100);
 waitFor(testsDone, 'Tests Complete.\n', null, function() { killServer(); finish(); }, 1000)
 
-//Start the selenium
+//Start the selenium server
 function startServer() {
     console.log('=== Starting Selenium Server ===');
     exec('java -jar selenium-server-standalone-2.45.0.jar', {silent:true}, function(status, output){});
@@ -46,7 +46,6 @@ function waitFor(condition, successMessage, waitMessage, callback, time) {
 // Start the tests. They run asynchronously
 function startTests() {
     console.log('=== Running Tests ===');
-
     cd('tests');
     ls('*.js').forEach(function(file) {
         console.log('Starting ' + file)
@@ -58,13 +57,13 @@ function startTests() {
     testingStarted = true;
 }
 
-function testCallback(passed, message) {
+function testCallback(result) {
     currentTests--;
-
-    if (passed) {
+    if (result['passed']) {
         passedTests++;
-    } else {
-        output.push(message);
+    }
+    if (result['message']) {
+        output.push(result['title'] + '\n\t' + result['message']);
     }
 }
 
@@ -75,15 +74,12 @@ function testsDone() {
 
 // stop the selenium server
 function killServer() {
-    // this must be terrible practice
     console.log("=== Stopping Server ===\n");
     exec('kill \"$(ps aux | grep \'selenium-server-standalone\' | grep -v \'grep\' | head -n 1 | awk \'{print $2}\')\"');
 }
 
 //Do stuff with the data we gathered
 function finish() {
-
-
     console.log('=== Test Results ===');
     console.log('Out of ' + totalTests + ' tests, ' + passedTests + ' passed.\n');
 
