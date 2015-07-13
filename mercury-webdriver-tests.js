@@ -62,9 +62,8 @@ function testCallback(result) {
     if (result['passed']) {
         passedTests++;
     }
-    if (result['message']) {
-        output.push(result['title'] + '\n\t' + result['message']);
-    }
+
+    output.push(result.title + ': ' + (result.passed ? 'PASSED' : 'FAILED') + (result.message ? '\n\t' + result.message : ''));
 }
 
 // are all the tests done?
