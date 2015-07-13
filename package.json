@@ -1,0 +1,24 @@
+{
+    "name": "mercury-webdriver-tests",
+    "version": "0.0.0",
+    "description": "Automated tests for the Mercury application using WebdriverIO",
+    "author": "Andrew Gleeson <agleeson@wikia-inc.com>",
+    "scripts": {
+        "test": "node mercury-webdriver-tests.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/katanka/mercury-webdriver-tests/"
+    },
+    "bugs": {
+        "url": "https://github.com/katanka/mercury-webdriver-tests/issues"
+    },
+    "dependencies": {
+        "webdriverio": "*",
+        "shelljs": "*",
+        "domain": "*"
+    },
+    "preferGlobal": false,
+    "private": true,
+    "license": "MIT"
+}
