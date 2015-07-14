@@ -4,4 +4,4 @@ More info: http://webdriver.io/guide.html
 
 To run:
  - `npm install`
- - `npm test`
+ - `node mercury-webdriver-tests.js [optional glob patterns of tests]`
