@@ -1,4 +1,5 @@
-var webdriverio = require('webdriverio');
+var webdriverio = require('webdriverio'),
+    mm = require('micromatch');
 require('shelljs/global');
 
 var options = {
@@ -11,13 +12,28 @@ var currentTests = 0,
     totalTests = 0,
     passedTests = 0,
     testingStarted = false,
-    output = [];
+    output = [],
+    tests = [];
 
+tests = chooseTests(process.argv.slice(2));
 startServer();
-waitFor(serverReady, 'Server Started.\n', 'waiting...', startTests, 100);
+waitFor(serverReady, 'Server Started.\n', 'waiting...', function() { startTests(tests); }, 100);
 waitFor(testsDone, 'Tests Complete.\n', null, function() { killServer(); finish(); }, 1000)
 
-//Start the selenium server
+// Decide which tests to run
+function chooseTests(args) {
+    var allTests = [];
+
+    cd('tests');
+    ls('*.js').forEach(function(file) {
+        allTests.push(file);
+    });
+    cd('..');
+
+    return args.length === 0 ? allTests : mm(allTests, args);
+}
+
+// Start the selenium server
 function startServer() {
     console.log('=== Starting Selenium Server ===');
     exec('java -jar selenium-server-standalone-2.45.0.jar', {silent:true}, function(status, output){});
@@ -46,14 +62,12 @@ function waitFor(condition, successMessage, waitMessage, callback, time) {
 // Start the tests. They run asynchronously
 function startTests() {
     console.log('=== Running Tests ===');
-    cd('tests');
-    ls('*.js').forEach(function(file) {
+    tests.forEach(function(file) {
         console.log('Starting ' + file)
         currentTests++;
         totalTests++;
         require('./tests/'+file)(webdriverio, options, testCallback);
     });
-    cd('..');
     testingStarted = true;
 }
 

@@ -16,7 +16,8 @@
     "dependencies": {
         "webdriverio": "*",
         "shelljs": "*",
-        "domain": "*"
+        "domain": "*",
+        "micromatch": "*"
     },
     "preferGlobal": false,
     "private": true,
