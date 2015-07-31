@@ -63,7 +63,7 @@ function waitFor(condition, successMessage, waitMessage, callback, time) {
 function startTests() {
     console.log('=== Running Tests ===');
     tests.forEach(function(file) {
-        console.log('Starting ' + file)
+        console.log('Starting ' + file);
         currentTests++;
         totalTests++;
         require('./tests/'+file)(webdriverio, options, testCallback);
