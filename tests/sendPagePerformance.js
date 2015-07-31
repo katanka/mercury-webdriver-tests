@@ -1,5 +1,4 @@
 module.exports = function(webdriverio, options, callback){
-	// TEST HERE
 	var passed = false,
 		title = 'sendPagePerformance',
 		message = '',
@@ -19,7 +18,7 @@ module.exports = function(webdriverio, options, callback){
 			client
 				.init()
 				// todo: make this configurable
-				.url('http://sandbox-s4.ja.destiny.wikia.com/wiki/Destiny?useskin=mercury&buckysampling=100&noexternals=1')
+				.url('http://ja.destiny.wikia.com/wiki/Destiny?useskin=mercury&buckysampling=100&noexternals=1')
 				.waitUntil(function() {
 					return this.execute(function() {
 						return window.readyState === 'complete';
